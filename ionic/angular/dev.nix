@@ -6,41 +6,32 @@
   # Use https://search.nixos.org/packages to find packages
   packages = [
     pkgs.nodejs_20
-    pkgs.unzip # Required for cordova
-    (pkgs.buildFHSUserEnv {
-      name = "android-env";
-      targetPkgs = pkgs: (with pkgs; [
-        zulu_17
-        gnumake
-        android-sdk
-      ]);
-      runScript = "bash";
-    })
   ];
   # Sets environment variables in the workspace
-  env = {
-    # for android builds
-    JAVA_HOME = pkgs.zulu_17;
-    ANDROID_SDK_ROOT = "${pkgs.android-sdk}/share/android-sdk";
-  };
+  env = {};
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
-      "ionic.ionic"
+      "angular.ng-template"
     ];
     workspace = {
       # Runs when a workspace is first created with this `dev.nix` file
       onCreate = {
         npm-install = "npm ci --no-audit --prefer-offline --no-progress --timing || npm i --no-audit --no-progress --timing";
         # Open editors for the following files by default, if they exist:
-        default.openFiles = [
-          "src/app/home/home.page.ts"
-        ];
+        default.openFiles = [ "src/app/app.component.ts" ];
       };
-      # To run something each time your workspace starts, use the following
-      # onStart = {
-      #  start-server = "ionic serve";
-      # };
+      # To run something each time the workspace is (re)started, use the `onStart` hook
+    };
+    # Enable previews and customize configuration
+    previews = {
+      enable = true;
+      previews = {
+        web = {
+          command = ["npm" "run" "start" "--" "--port" "$PORT" "--host" "0.0.0.0"];
+          manager = "web";
+        };
+      };
     };
   };
 }
