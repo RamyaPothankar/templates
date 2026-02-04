@@ -1,6 +1,8 @@
-{ pkgs, language ? "js", ... }: {
+{ pkgs, language ? "ts", ... }: {
   packages = [
     pkgs.nodejs_20
+    pkgs.nodePackages.eslint
+    pkgs.nodePackages.prettier
   ];
   bootstrap = ''
     mkdir -p "$WS_NAME"
@@ -18,5 +20,42 @@
     chmod -R u+w "$out"
     
     cd "$out"; npm install --package-lock-only --ignore-scripts
+    # ESLint and Prettier setup
+    cat <<EOF > "$out/.eslintrc.json"
+    {
+      "root": true,
+      "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+      },
+      "extends": [
+        "eslint:recommended",
+        "plugin:vue/vue3-essential",
+        "prettier"
+      ],
+      "parserOptions": {
+        "ecmaVersion": "latest",
+        "parser": "@typescript-eslint/parser",
+        "sourceType": "module"
+      },
+      "plugins": [
+        "vue",
+        "@typescript-eslint"
+      ],
+      "rules": {}
+    }
+    EOF
+
+    cat <<EOF > "$out/.prettierrc.json"
+    {
+      "semi": false,
+      "singleQuote": true
+    }
+    EOF
+
+    # Update package.json
+    jq '.scripts.lint = "eslint src --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"' "$out/package.json" > "$out/package.json.tmp" && mv "$out/package.json.tmp" "$out/package.json"
+    jq '.scripts.format = "prettier --write src"' "$out/package.json" > "$out/package.json.tmp" && mv "$out/package.json.tmp" "$out/package.json"
   '';
 }
