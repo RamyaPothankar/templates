@@ -15,7 +15,14 @@ export default [
   // 3. Recommended rules for Vue
   ...vue.configs['flat/recommended'],
 
-  // 4. Prettier config must be last.
+  // 4. Custom rule overrides
+  {
+    rules: {
+      'vue/require-default-prop': 'off',
+    },
+  },
+
+  // 5. Prettier config must be last.
   // It turns off any formatting rules from other configs that might conflict.
   prettier,
 ];
