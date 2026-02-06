@@ -1,5 +1,5 @@
-const fs = require('node:fs');
-const path = require('node:path');
+import fs from 'node:fs';
+import path from 'node:path';
 
 // --- Configuration ---
 const packageJsonPath = path.join(process.cwd(), 'package.json');
