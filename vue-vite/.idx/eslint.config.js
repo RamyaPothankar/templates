@@ -15,8 +15,14 @@ export default [
   // 3. Recommended rules for Vue
   ...vue.configs['flat/recommended'],
 
-  // 4. Custom rule overrides
+  // 4. Configure parser for TypeScript in .vue files and add custom rules
   {
+    files: ['**/*.vue'],
+    languageOptions: {
+      parserOptions: {
+        parser: tseslint.parser,
+      },
+    },
     rules: {
       'vue/require-default-prop': 'off',
     },
@@ -26,3 +32,4 @@ export default [
   // It turns off any formatting rules from other configs that might conflict.
   prettier,
 ];
+
