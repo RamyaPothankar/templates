@@ -5,8 +5,8 @@
   channel = "stable-24.05"; # or "unstable"
   # Use https://search.nixos.org/packages to find packages
   packages = [
-    pkgs.nodejs_20,
-    pkgs.nodePackages.eslint,
+    pkgs.nodejs_20
+    pkgs.nodePackages.eslint
     pkgs.nodePackages.prettier
   ];
   # Sets environment variables in the workspace
@@ -14,8 +14,8 @@
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
-      "svelte.svelte-vscode",
-      "dbaeumer.vscode-eslint",
+      "svelte.svelte-vscode"
+      "dbaeumer.vscode-eslint"
       "esbenp.prettier-vscode"
     ];
     workspace = {
@@ -39,4 +39,5 @@
     };
   };
 }
+
 
