@@ -4,6 +4,13 @@ const path = require('path');
 const packageJsonPath = path.join(process.cwd(), 'package.json');
 const packageJson = require(packageJsonPath);
 
+// Add lint and format scripts
+packageJson.scripts = {
+  ...packageJson.scripts,
+  "lint": "eslint .",
+  "format": "prettier --write ."
+};
+
 // Add new dev dependencies
 packageJson.devDependencies = {
   ...packageJson.devDependencies,
@@ -17,5 +24,6 @@ packageJson.devDependencies = {
 // Write the updated package.json back to the file
 fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
-console.log('Successfully updated package.json with ESLint and Prettier dependencies.');
+console.log('Successfully updated package.json with ESLint and Prettier dependencies and scripts.');
+
 
