@@ -18,3 +18,4 @@ packageJson.devDependencies = {
 fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
 console.log('Successfully updated package.json with ESLint and Prettier dependencies.');
+
