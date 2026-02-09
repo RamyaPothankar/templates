@@ -18,9 +18,9 @@
     cp -f ${./.idx/eslint.config.js} ./eslint.config.js
 
     # Copy and run the helper script to update package.json with ESLint/Prettier dependencies.
-    cp -f ${./.idx/update-pkg.js} ./update-pkg.js
-    node ./update-pkg.js
-    rm ./update-pkg.js # Clean up the script after use.
+    cp -f ${./.idx/update-pkg.cjs} ./update-pkg.cjs
+    node ./update-pkg.cjs
+    rm ./update-pkg.cjs # Clean up the script after use.
 
     # Now, install all dependencies (including the new ones).
     npm install --ignore-scripts
