@@ -13,6 +13,9 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": ["tsconfig.json"]
+  },
   "plugins": ["@typescript-eslint", "prettier"],
   "extends": [
     "eslint:recommended",
@@ -25,8 +28,13 @@
 }
 EOF
 
+    # Create the .eslintignore file to prevent linting the config file itself
+    cat <<'EOF' > .eslintignore
+.eslintrc.json
+EOF
+
     # Use Node.js to programmatically add scripts and dev dependencies to package.json
-    node -e '
+    node -e '\
 const fs = require("fs");
 const pkgPath = "package.json";
 const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
@@ -50,8 +58,7 @@ pkg.devDependencies = {
 };
 
 fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
-'
-    # --- End of ADDED ESLint/Prettier Integration ---
+'\n    # --- End of ADDED ESLint/Prettier Integration ---
 
     # Now, go back to the original directory to finalize the template setup.
     cd ..
@@ -70,6 +77,7 @@ fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
     (cd "$out"; npm install --package-lock-only --ignore-scripts)
   '';
 }
+
 
 
 
