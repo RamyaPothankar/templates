@@ -33,32 +33,38 @@ EOF
 .eslintrc.json
 EOF
 
-    # Use Node.js to programmatically add scripts and dev dependencies to package.json
-    node -e '\
-const fs = require("fs");
-const pkgPath = "package.json";
-const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
+    # Create a temporary Node.js script to update package.json
+    cat <<'JS_EOF' > update-package.js
+const fs = require('fs');
+const pkgPath = 'package.json';
+const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
 
 // Add linting and formatting scripts
 pkg.scripts = {
   ...pkg.scripts,
-  "lint": "eslint .",
-  "format": "prettier --write ."
+  'lint': 'eslint \'src/**/*.ts\'',
+  'format': 'prettier --write \'src/**/*.{ts,html,css,scss,json}\''
 };
 
 // Add new dev dependencies
 pkg.devDependencies = {
   ...pkg.devDependencies,
-  "eslint": "^8.57.0",
-  "prettier": "^3.2.5",
-  "@typescript-eslint/eslint-plugin": "^7.10.0",
-  "@typescript-eslint/parser": "^7.10.0",
-  "eslint-config-prettier": "^9.1.0",
-  "eslint-plugin-prettier": "^5.1.3"
+  'eslint': '^8.57.0',
+  'prettier': '^3.2.5',
+  '@typescript-eslint/eslint-plugin': '^7.10.0',
+  '@typescript-eslint/parser': '^7.10.0',
+  'eslint-config-prettier': '^9.1.0',
+  'eslint-plugin-prettier': '^5.1.3'
 };
 
 fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
-'\n    # --- End of ADDED ESLint/Prettier Integration ---
+JS_EOF
+
+    # Run the script and then remove it
+    node update-package.js
+    rm update-package.js
+
+    # --- End of ADDED ESLint/Prettier Integration ---
 
     # Now, go back to the original directory to finalize the template setup.
     cd ..
@@ -77,6 +83,7 @@ fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
     (cd "$out"; npm install --package-lock-only --ignore-scripts)
   '';
 }
+
 
 
 
