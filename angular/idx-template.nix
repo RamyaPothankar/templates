@@ -4,7 +4,7 @@
   bootstrap = ''
     npx --prefer-offline -y @angular/cli new --skip-git --defaults --skip-install --directory "$WS_NAME" "$WS_NAME"
     cd "$WS_NAME"
-    npm install eslint@8 prettier eslint-config-prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin @angular-eslint/eslint-plugin @angular-eslint/eslint-plugin-template @angular-eslint/template-parser --save-dev
+    npm install eslint@^8.56.0 prettier@^3.2.5 eslint-config-prettier@^9.1.0 @typescript-eslint/parser@^7.0.0 @typescript-eslint/eslint-plugin@^7.0.0 @angular-eslint/builder@^17.0.0 @angular-eslint/eslint-plugin@^17.0.0 @angular-eslint/eslint-plugin-template@^17.0.0 @angular-eslint/template-parser@^17.0.0 --save-dev
     echo '{
       "root": true,
       "parser": "@typescript-eslint/parser",
@@ -44,6 +44,7 @@ fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2));
     (cd "$out"; npm install --package-lock-only --ignore-scripts)
   '';
 }
+
 
 
 
