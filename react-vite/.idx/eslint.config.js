@@ -21,6 +21,7 @@ export default [
     rules: {
       // Start with the recommended rules for react
       ...react.configs.recommended.rules,
+      ...react.configs['jsx-runtime'].rules,
 
       // You can add custom rule overrides here if needed
     },
@@ -35,4 +36,5 @@ export default [
   // It turns off any formatting rules from other configs that might conflict.
   prettier
 ];
+
 
