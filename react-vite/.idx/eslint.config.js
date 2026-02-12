@@ -1,48 +1,38 @@
-{ pkgs, language ? "js", ... }:
+import tseslint from 'typescript-eslint';
+import react from 'eslint-plugin-react';
+import prettier from 'eslint-config-prettier';
 
-let
-  node = pkgs.nodejs_20;
-in
-{
-  packages = [
-    node
-  ];
-  bootstrap = ''
-    mkdir -p "$WS_NAME"
-    ${node}/bin/npm create -y vite@latest "$WS_NAME" -- --template ${if language == "ts" then "react-ts" else "react"}
+// The modern "flat config" is a plain JavaScript array.
+export default [
+  // 1. Global ignores
+  {
+    ignores: ['dist', 'node_modules', '*.cjs', '**/*.config.js'],
+  },
 
-    # Enter the new project directory to add our customizations.
-    cd "$WS_NAME"
+  // 2. Recommended rules from typescript-eslint, applied to all .ts files
+  ...tseslint.configs.recommended,
 
-    # Remove the default ESLint config file created by Vite.
-    rm -f ./.eslintrc.cjs
+  // 3. Our custom rules for React
+  {
+    files: ['src/**/*.js', 'src/**/*.jsx', 'src/**/*.ts', 'src/**/*.tsx'],
+    plugins: {
+      react,
+    },
+    rules: {
+      // Start with the recommended rules for react
+      ...react.configs.recommended.rules,
 
-    # Copy our custom ESLint config from the template's .idx directory.
-    cp -f ${../.idx/eslint.config.js} ./eslint.config.js
+      // You can add custom rule overrides here if needed
+    },
+    settings: {
+        react: {
+            version: 'detect',
+        },
+    }
+  },
 
-    # Copy and run the helper script to update package.json using the correct node.
-    cp -f ${../.idx/update-pkg.js} ./update-pkg.js
-    ${node}/bin/node ./update-pkg.js
-    rm ./update-pkg.js # Clean up the script after use.
+  // 4. Prettier config must be last.
+  // It turns off any formatting rules from other configs that might conflict.
+  prettier
+];
 
-    # Return to the root to continue the standard template setup.
-    cd ..
-
-    # Standard IDX template finalization steps.
-    mkdir -p "$WS_NAME/.idx/"
-    cp -rf ${./icon.png} "$WS_NAME/.idx/icon.png"
-    cp -rf ${./dev.nix} "$WS_NAME/.idx/dev.nix"
-    chmod -R +w "$WS_NAME"
-    mv "$WS_NAME" "$out"
-
-    # Set final permissions and copy over AI rules.
-    mkdir -p "$out/.idx"
-    chmod -R u+w "$out"
-    cp -rf ${./.idx/airules.md} "$out/.idx/airules.md"
-    cp -rf "$out/.idx/airules.md" "$out/GEMINI.md"
-    chmod -R u+w "$out"
-
-    # Generate the package-lock.json file without running scripts.
-    cd "$out"; npm install --package-lock-only --ignore-scripts
-  '';
-}
