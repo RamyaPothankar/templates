@@ -14,6 +14,9 @@ in
     # Enter the new project directory to add our customizations.
     cd "$WS_NAME"
 
+    # Fix the target="_blank" security issue in the generated App.jsx file.
+    sed -i 's/target="_blank"/target="_blank" rel="noreferrer"/g' src/App.jsx
+
     # Remove the default ESLint config file created by Vite.
     rm -f ./.eslintrc.cjs
 
@@ -46,4 +49,5 @@ in
     cd "$out"; npm install --package-lock-only --ignore-scripts
   '';
 }
+
 
