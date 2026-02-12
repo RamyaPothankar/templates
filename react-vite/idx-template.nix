@@ -18,10 +18,10 @@ in
     rm -f ./.eslintrc.cjs
 
     # Copy our custom ESLint config from the template's .idx directory.
-    cp -f ${../.idx/eslint.config.js} ./eslint.config.js
+    cp -f ${./.idx/eslint.config.js} ./eslint.config.js
 
     # Copy and run the helper script to update package.json using the correct node.
-    cp -f ${../.idx/update-pkg.js} ./update-pkg.js
+    cp -f ${./.idx/update-pkg.js} ./update-pkg.js
     ${node}/bin/node ./update-pkg.js
     rm ./update-pkg.js # Clean up the script after use.
 
@@ -46,3 +46,4 @@ in
     cd "$out"; npm install --package-lock-only --ignore-scripts
   '';
 }
+
