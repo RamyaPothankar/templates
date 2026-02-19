@@ -10,12 +10,14 @@
 
   bootstrap = ''
     mkdir "$out"
+    GIT_FLAG=${if git then "--git" else "--no-git"}
+
     ${
-      if packageManager == "npm" then "npm create astro@${version} \\"$out\\" -- --template ${template} --typescript ${typescript} ${if git then \\"--git\\" else \\"--no-git\\" } --no-install"
-      else if packageManager == "yarn" then "yarn create astro \\"$out\\" --template ${template} --typescript ${typescript} ${if git then \\"--git\\" else \\"--no-git\\" } --no-install" 
-      else if packageManager == "pnpm" then "pnpm create astro \\"$out\\" --template ${template} --typescript ${typescript} ${if git then \\"--git\\" else \\"--no-git\\" } --no-install"
-      else if packageManager == "bun" then "bun create astro \\"$out\\" --template ${template} --typescript ${typescript} ${if git then \\"--git\\" else \\"--no-git\\" } --no-install"
-      else "npm create astro@${version} \\"$out\\" -- --template ${template} --typescript ${typescript} ${if git then \\"--git\\" else \\"--no-git\\" } --no-install"
+      if packageManager == "npm" then "npm create astro@${version} \"$out\" -- --template ${template} --typescript ${typescript} $GIT_FLAG --no-install"
+      else if packageManager == "yarn" then "yarn create astro \"$out\" --template ${template} --typescript ${typescript} $GIT_FLAG --no-install" 
+      else if packageManager == "pnpm" then "pnpm create astro \"$out\" --template ${template} --typescript ${typescript} $GIT_FLAG --no-install"
+      else if packageManager == "bun" then "bun create astro \"$out\" --template ${template} --typescript ${typescript} $GIT_FLAG --no-install"
+      else "npm create astro@${version} \"$out\" -- --template ${template} --typescript ${typescript} $GIT_FLAG --no-install"
     }
 
     mkdir -p "$out"/.idx
