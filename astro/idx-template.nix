@@ -10,27 +10,26 @@
 
   bootstrap = ''
     mkdir "$out"
+    cd "$out"
     GIT_FLAG=${if git then "--git" else "--no-git"}
 
     ${
-      if packageManager == "npm" then "npm create astro@${version} \"$out\" -- --template ${template} --typescript ${typescript} $GIT_FLAG --no-install"
-      else if packageManager == "yarn" then "yarn create astro \"$out\" --template ${template} --typescript ${typescript} $GIT_FLAG --no-install" 
-      else if packageManager == "pnpm" then "pnpm create astro \"$out\" --template ${template} --typescript ${typescript} $GIT_FLAG --no-install"
-      else if packageManager == "bun" then "bun create astro \"$out\" --template ${template} --typescript ${typescript} $GIT_FLAG --no-install"
-      else "npm create astro@${version} \"$out\" -- --template ${template} --typescript ${typescript} $GIT_FLAG --no-install"
+      if packageManager == "npm" then "npm create astro@${version} . -- --template ${template} --typescript ${typescript} $GIT_FLAG --no-install"
+      else if packageManager == "yarn" then "yarn create astro . --template ${template} --typescript ${typescript} $GIT_FLAG --no-install" 
+      else if packageManager == "pnpm" then "pnpm create astro . --template ${template} --typescript ${typescript} $GIT_FLAG --no-install"
+      else if packageManager == "bun" then "bun create astro . --template ${template} --typescript ${typescript} $GIT_FLAG --no-install"
+      else "npm create astro@${version} . -- --template ${template} --typescript ${typescript} $GIT_FLAG --no-install"
     }
 
-    mkdir -p "$out"/.idx
-    packageManager=${packageManager} tailwind=${if tailwind then "true" else "false"} j2 ${./devNix.j2} -o "$out"/.idx/dev.nix
-    nixfmt "$out"/.idx/dev.nix
+    mkdir -p ./.idx
+    packageManager=${packageManager} tailwind=${if tailwind then "true" else "false"} j2 ${./devNix.j2} -o ./.idx/dev.nix
+    nixfmt ./.idx/dev.nix
 
-    mkdir -p "$out/.idx"
-    chmod -R u+w "$out"
-    cp -rf ${./.idx/airules.md} "$out"/.idx/airules.md"
-    cp -rf "$out"/.idx/airules.md" "$out/GEMINI.md"
+    cp -rf ${./.idx/airules.md} ./.idx/airules.md
+    cp -rf ./.idx/airules.md ./GEMINI.md
     
     # Create eslint config
-    cat <<EOF > "$out/eslint.config.js"
+    cat <<EOF > ./eslint.config.js
 module.exports = [
   "eslint:recommended",
   ...require("@typescript-eslint/eslint-plugin").configs.recommended,
@@ -40,7 +39,7 @@ module.exports = [
 EOF
 
     # Create prettier config
-    cat <<EOF > "$out/.prettierrc"
+    cat <<EOF > ./.prettierrc
 {
   "plugins": ["prettier-plugin-astro"],
   "overrides": [
@@ -55,16 +54,14 @@ EOF
 EOF
 
     # Create prettier ignore
-    cat <<EOF > "$out/.prettierignore"
+    cat <<EOF > ./.prettierignore
 dist
 .astro
 EOF
     
-    chmod -R u+w "$out"
+    chmod -R u+w .
 
-    (
-      cd "$out" && \
-      node -e "
+    node -e "
 const fs = require('fs');
 const path = require('path');
 const packageJsonPath = path.join(process.cwd(), 'package.json');
@@ -95,10 +92,10 @@ if (fs.existsSync(packageJsonPath)) {
   console.log('package.json not found at:', packageJsonPath);
 }
 "
-    )
     
-    ${if packageManager == "npm" then "( cd \\$out && npm i --package-lock-only --ignore-scripts )" else ""}
+    ${if packageManager == "npm" then "npm i --package-lock-only --ignore-scripts" else ""}
   '';
 }
+
 
 
