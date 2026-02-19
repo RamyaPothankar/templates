@@ -11,11 +11,11 @@
   bootstrap = ''
     mkdir "$out"
     ${
-      if packageManager == "npm" then "npm create astro@${version} \\\"$out\\\" -- --template ${template} --typescript ${typescript} ${if git then \\\"--git\\\" else \\\"--no-git\\\" } --no-install"
-      else if packageManager == "yarn" then "yarn create astro \\\"$out\\\" --template ${template} --typescript ${typescript} ${if git then \\\"--git\\\" else \\\"--no-git\\\" } --no-install" 
-      else if packageManager == "pnpm" then "pnpm create astro \\\"$out\\\" --template ${template} --typescript ${typescript} ${if git then \\\"--git\\\" else \\\"--no-git\\\" } --no-install"
-      else if packageManager == "bun" then "bun create astro \\\"$out\\\" --template ${template} --typescript ${typescript} ${if git then \\\"--git\\\" else \\\"--no-git\\\" } --no-install"
-      else "npm create astro@${version} \\\"$out\\\" -- --template ${template} --typescript ${typescript} ${if git then \\\"--git\\\" else \\\"--no-git\\\" } --no-install"
+      if packageManager == "npm" then "npm create astro@${version} \\"$out\\" -- --template ${template} --typescript ${typescript} ${if git then \\"--git\\" else \\"--no-git\\" } --no-install"
+      else if packageManager == "yarn" then "yarn create astro \\"$out\\" --template ${template} --typescript ${typescript} ${if git then \\"--git\\" else \\"--no-git\\" } --no-install" 
+      else if packageManager == "pnpm" then "pnpm create astro \\"$out\\" --template ${template} --typescript ${typescript} ${if git then \\"--git\\" else \\"--no-git\\" } --no-install"
+      else if packageManager == "bun" then "bun create astro \\"$out\\" --template ${template} --typescript ${typescript} ${if git then \\"--git\\" else \\"--no-git\\" } --no-install"
+      else "npm create astro@${version} \\"$out\\" -- --template ${template} --typescript ${typescript} ${if git then \\"--git\\" else \\"--no-git\\" } --no-install"
     }
 
     mkdir -p "$out"/.idx
@@ -98,4 +98,5 @@ if (fs.existsSync(packageJsonPath)) {
     ${if packageManager == "npm" then "( cd \\$out && npm i --package-lock-only --ignore-scripts )" else ""}
   '';
 }
+
 
