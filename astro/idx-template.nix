@@ -10,7 +10,13 @@
 
   bootstrap = ''
     mkdir "$out"
-    ${\n      if packageManager == "npm" then "npm create astro@${version} \\\"$out\\\" -- --template ${template} --typescript ${typescript} ${if git then \"--git\" else \"--no-git\" } --no-install"\n      else if packageManager == "yarn" then "yarn create astro \\\"$out\\\" --template ${template} --typescript ${typescript} ${if git then \"--git\" else \"--no-git\" } --no-install" \n      else if packageManager == "pnpm" then "pnpm create astro \\\"$out\\\" --template ${template} --typescript ${typescript} ${if git then \"--git\" else \"--no-git\" } --no-install"\n      else if packageManager == "bun" then "bun create astro \\\"$out\\\" --template ${template} --typescript ${typescript} ${if git then \"--git\" else \"--no-git\" } --no-install"\n      else "npm create astro@${version} \\\"$out\\\" -- --template ${template} --typescript ${typescript} ${if git then \"--git\" else \"--no-git\" } --no-install"\n    }
+    ${
+      if packageManager == "npm" then "npm create astro@${version} \\\"$out\\\" -- --template ${template} --typescript ${typescript} ${if git then \\\"--git\\\" else \\\"--no-git\\\" } --no-install"
+      else if packageManager == "yarn" then "yarn create astro \\\"$out\\\" --template ${template} --typescript ${typescript} ${if git then \\\"--git\\\" else \\\"--no-git\\\" } --no-install" 
+      else if packageManager == "pnpm" then "pnpm create astro \\\"$out\\\" --template ${template} --typescript ${typescript} ${if git then \\\"--git\\\" else \\\"--no-git\\\" } --no-install"
+      else if packageManager == "bun" then "bun create astro \\\"$out\\\" --template ${template} --typescript ${typescript} ${if git then \\\"--git\\\" else \\\"--no-git\\\" } --no-install"
+      else "npm create astro@${version} \\\"$out\\\" -- --template ${template} --typescript ${typescript} ${if git then \\\"--git\\\" else \\\"--no-git\\\" } --no-install"
+    }
 
     mkdir -p "$out"/.idx
     packageManager=${packageManager} tailwind=${if tailwind then "true" else "false"} j2 ${./devNix.j2} -o "$out"/.idx/dev.nix
@@ -60,7 +66,9 @@ EOF
 const fs = require('fs');
 const path = require('path');
 const packageJsonPath = path.join(process.cwd(), 'package.json');
+console.log('Updating package.json at:', packageJsonPath);
 if (fs.existsSync(packageJsonPath)) {
+  console.log('package.json found. Updating...');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
 
   packageJson.scripts = {
@@ -80,6 +88,9 @@ if (fs.existsSync(packageJsonPath)) {
   };
 
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+  console.log('package.json updated successfully.');
+} else {
+  console.log('package.json not found at:', packageJsonPath);
 }
 "
     )
@@ -87,3 +98,4 @@ if (fs.existsSync(packageJsonPath)) {
     ${if packageManager == "npm" then "( cd \\$out && npm i --package-lock-only --ignore-scripts )" else ""}
   '';
 }
+
