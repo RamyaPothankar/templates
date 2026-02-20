@@ -13,7 +13,7 @@ const scriptsToAdd = {
 const devDependenciesToAdd = {
   '@eslint/js': 'latest',
   'typescript-eslint': 'latest',
-  'eslint': '^8.0.0',
+  'eslint': 'latest',
   'eslint-plugin-astro': 'latest',
   'eslint-config-prettier': 'latest',
   'prettier': 'latest',
@@ -53,4 +53,5 @@ try {
   console.error('Error updating package.json:', error);
   process.exit(1);
 }
+
 
