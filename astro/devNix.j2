@@ -1,26 +1,3 @@
-{% set perPackageManager = {
-    "npm": {
-        "packages": "pkgs.nodejs_20",
-        "onCreate": "npm ci --prefer-offline --no-audit --no-progress --timing || npm i --no-audit --no-progress --timing"
-                    + ("\nyes | npx astro add tailwind" if tailwind == "true" else ""),
-        "previewCmdPrefix": "\"npm\" \"run\" \"dev\" \"--\""
-    },
-    "bun": {
-        "packages": "pkgs.bun",
-        "onCreate": "bun install" + ("\nyes | npx astro add tailwind" if tailwind == "true" else ""),
-        "previewCmdPrefix": "\"bunx\" \"--bun\" \"astro\" \"dev\""
-    },
-    "pnpm": {
-        "packages": "pkgs.nodejs_20 pkgs.nodePackages.pnpm",
-        "onCreate": "pnpm install" + ("\nyes | pnpm astro add tailwind" if tailwind == "true" else ""),
-        "previewCmdPrefix": "\"pnpm\" \"run\" \"dev\""
-    },
-    "yarn": {
-        "packages": "pkgs.nodejs_20 pkgs.yarn",
-        "onCreate": "yarn" + ("\nyes | yarn astro add tailwind" if tailwind == "true" else ""),
-        "previewCmdPrefix": "\"yarn\" \"dev\""
-    },
-}[packageManager]%}
 # To learn more about how to use Nix to configure your environment
 # see: https://developers.google.com/idx/guides/customize-idx-env
 { pkgs, ... }: {
@@ -28,7 +5,7 @@
   channel = "stable-24.05"; # or "unstable"
   # Use https://search.nixos.org/packages to find packages
   packages = [
-    {{perPackageManager.packages}}
+    pkgs.nodejs_20
     pkgs.nodePackages.eslint
     pkgs.nodePackages.prettier
   ];
@@ -37,16 +14,15 @@
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
-      "astro-build.astro-vscode"
       "dbaeumer.vscode-eslint"
       "esbenp.prettier-vscode"
     ];
     workspace = {
       # Runs when a workspace is first created with this `dev.nix` file
       onCreate = {
-        install = "{{perPackageManager.onCreate}}";
+        install = "npm ci --no-audit --prefer-offline --no-progress --timing";
         # Open editors for the following files by default, if they exist:
-        default.openFiles = [ "src/pages/index.astro" ];
+        default.openFiles = [ "index.md" ];
       };
       # To run something each time the workspace is (re)started, use the `onStart` hook
     };
@@ -55,7 +31,7 @@
       enable = true;
       previews = {
         web = {
-          command = [{{perPackageManager.previewCmdPrefix}} "--port" "$PORT" "--hostname" "0.0.0.0"];
+          command = ["npx" "@11ty/eleventy" "--serve" "--port=$PORT"];
           manager = "web";
         };
       };
