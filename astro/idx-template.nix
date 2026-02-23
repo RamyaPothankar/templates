@@ -28,30 +28,13 @@
     cp -rf ${./.idx/airules.md} ./.idx/airules.md
     cp -rf ./.idx/airules.md ./GEMINI.md
     
-    # Create eslint config
-    cat <<EOF > ./eslint.config.js
-module.exports = [
-  "eslint:recommended",
-  ...require("@typescript-eslint/eslint-plugin").configs.recommended,
-  ...require("eslint-plugin-astro").configs.recommended,
-  "prettier",
-];
-EOF
+    # Copy our custom ESLint config from the template's .idx directory.
+    cp -f ${./.idx/eslint.config.js} ./eslint.config.js
 
-    # Create prettier config
-    cat <<EOF > ./.prettierrc
-{
-  "plugins": ["prettier-plugin-astro"],
-  "overrides": [
-    {
-      "files": "*.astro",
-      "options": {
-        "parser": "astro"
-      }
-    }
-  ]
-}
-EOF
+    # Copy and run the helper script to update package.json using the correct node.
+    cp -f ${./.idx/update-pkg.js} ./update-pkg.js
+    ${pkgs.nodejs_20}/bin/node ./update-pkg.js
+    rm ./update-pkg.js # Clean up the script after use.
 
     # Create prettier ignore
     cat <<EOF > ./.prettierignore
@@ -60,38 +43,6 @@ dist
 EOF
     
     chmod -R u+w .
-
-    node -e "
-const fs = require('fs');
-const path = require('path');
-const packageJsonPath = path.join(process.cwd(), 'package.json');
-console.log('Updating package.json at:', packageJsonPath);
-if (fs.existsSync(packageJsonPath)) {
-  console.log('package.json found. Updating...');
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
-
-  packageJson.scripts = {
-    ...packageJson.scripts,
-    'lint': 'eslint .'
-  };
-
-  packageJson.devDependencies = {
-    ...packageJson.devDependencies,
-    '@typescript-eslint/parser': 'latest',
-    '@typescript-eslint/eslint-plugin': 'latest',
-    'eslint': '^8.0.0',
-    'eslint-plugin-astro': 'latest',
-    'eslint-config-prettier': 'latest',
-    'prettier': 'latest',
-    'prettier-plugin-astro': 'latest'
-  };
-
-  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-  console.log('package.json updated successfully.');
-} else {
-  console.log('package.json not found at:', packageJsonPath);
-}
-"
     
     ${if packageManager == "npm" then "npm i --package-lock-only --ignore-scripts" else ""}
   '';
