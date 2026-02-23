@@ -2,22 +2,29 @@
     "npm": {
         "packages": "pkgs.nodejs_20",
         "onCreate": "npm ci --prefer-offline --no-audit --no-progress --timing || npm i --no-audit --no-progress --timing"
-                    + ("\nyes | npx astro add tailwind" if tailwind == "true" else ""),
+                    + ("\nyes | npx astro add tailwind" if tailwind == "true" else "")
+                    + "\nnpm run format:fix\nnpm run lint:fix",
         "previewCmdPrefix": "\"npm\" \"run\" \"dev\" \"--\""
     },
     "bun": {
         "packages": "pkgs.bun",
-        "onCreate": "bun install" + ("\nyes | npx astro add tailwind" if tailwind == "true" else ""),
+        "onCreate": "bun install"
+                    + ("\nyes | npx astro add tailwind" if tailwind == "true" else "")
+                    + "\nbun run format:fix\nbun run lint:fix",
         "previewCmdPrefix": "\"bunx\" \"--bun\" \"astro\" \"dev\""
     },
     "pnpm": {
         "packages": "pkgs.nodejs_20 pkgs.nodePackages.pnpm",
-        "onCreate": "pnpm install" + ("\nyes | pnpm astro add tailwind" if tailwind == "true" else ""),
+        "onCreate": "pnpm install"
+                    + ("\nyes | pnpm astro add tailwind" if tailwind == "true" else "")
+                    + "\npnpm run format:fix\npnpm run lint:fix",
         "previewCmdPrefix": "\"pnpm\" \"run\" \"dev\""
     },
     "yarn": {
         "packages": "pkgs.nodejs_20 pkgs.yarn",
-        "onCreate": "yarn" + ("\nyes | yarn astro add tailwind" if tailwind == "true" else ""),
+        "onCreate": "yarn"
+                    + ("\nyes | yarn astro add tailwind" if tailwind == "true" else "")
+                    + "\nyarn run format:fix\nyarn run lint:fix",
         "previewCmdPrefix": "\"yarn\" \"dev\""
     },
 }[packageManager]%}
@@ -27,14 +34,14 @@
   # Which nixpkgs channel to use.
   channel = "stable-24.05"; # or "unstable"
   # Use https://search.nixos.org/packages to find packages
-  packages = [{{perPackageManager.packages}}];
+  packages = [
+    {{perPackageManager.packages}}
+  ];
   # Sets environment variables in the workspace
   env = {};
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
-    extensions = [
-      "astro-build.astro-vscode"
-    ];
+    extensions = [ "astro-build.astro-vscode" "dbaeumer.vscode-eslint" "esbenp.prettier-vscode" ];
     workspace = {
       # Runs when a workspace is first created with this `dev.nix` file
       onCreate = {
