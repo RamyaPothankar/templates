@@ -47,6 +47,3 @@ EOF
     ${if packageManager == "npm" then "npm i --package-lock-only --ignore-scripts" else ""}
   '';
 }
-
-
-
