@@ -49,7 +49,7 @@
       enable = true;
       previews = {
         web = {
-          command = [{{perPackageManager.previewCmdPrefix}}, "--port", "$PORT", "--hostname", "0.0.0.0"];
+          command = [{{perPackageManager.previewCmdPrefix}} "--port" "$PORT" "--hostname" "0.0.0.0"];
           manager = "web";
         };
       };
